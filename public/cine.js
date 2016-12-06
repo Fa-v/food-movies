@@ -24,7 +24,6 @@ function clearInputs() {
 }
 
 function saveMovieData(event) {
-  dataValidation();
   //caching dom elements
   var $movieTitle = $('#title'),
       $movieDirector = $('#director'),
@@ -51,29 +50,32 @@ function showMessage($target) {
   $target.fadeIn(2000).fadeOut(2000);
 }
 
-function updateMovieList(savedMovie) {
-  dataValidation();
-  //appending last saved movie to the table
-  createMovieList([savedMovie]);
-}
-
-function createMovieList(getResponse) {
-  //initialize the table with data from the server
+function appendRowData(movie) {
   var $tableBody = $('#movie-table tbody'),
     $rowData;
 
-    getResponse.forEach(function(movie) {
-      $rowData = $('<tr><td>' +
-      '<input class="checkbox" type="checkbox">' + '</td><td id="row-id">' +
-      movie.id + '</td><td id="row-title">' +
-      movie.title + '</td><td id="row-director">' +
-      movie.director + '</td><td id="row-date">' +
-      movie.date + '</td><td id="row-synopsis">' +
-      movie.synopsis + '</td><td>' +
-      '</tr>');
-        
-      $tableBody.append($rowData);
-    });
+  $rowData = $('<tr><td>' +
+    '<input class="checkbox" type="checkbox">' + '</td><td id="row-id">' +
+    movie.id + '</td><td id="row-title">' +
+    movie.title + '</td><td id="row-director">' +
+    movie.director + '</td><td id="row-date">' +
+    movie.date + '</td><td id="row-synopsis">' +
+    movie.synopsis + '</td><td>' +
+    '</tr>');
+
+  $tableBody.append($rowData);
+}
+
+function updateMovieList(newMovie) {
+  //appending last saved movie to the table
+  appendRowData(newMovie);
+}
+
+function createMovieList(movieObjectArray) {
+  //initialize the table with data from the server (database)
+  movieObjectArray.films.forEach(function(movie) {
+    appendRowData(movie);
+  });
 }
 
 function fillForm(event) {
