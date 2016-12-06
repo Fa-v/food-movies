@@ -106,6 +106,7 @@ function modifyRowContent(putData) {
     //finding the checked row td values and overwriting with the new values
   var $checkedBoxes = $("input:checked").closest('tr'),
     $modifyMessage = $('#modify-success-message');
+    
   //update modified row movie data
   $checkedBoxes.find('#row-title').text(putData.title);
   $checkedBoxes.find('#row-director').text(putData.director);
@@ -139,7 +140,6 @@ function modifyMovie(event) {
     }
     modifyMovieData($rowId, JSON.stringify(modifiedMovieObject));
   }
-
 }
 
 function deleteRow() {

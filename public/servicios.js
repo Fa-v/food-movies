@@ -26,7 +26,6 @@ function modifyMovieData(id, modifiedMovieObject) {
   }).done(modifyRowContent);
 }
 
-
 function deleteMovieData(id) {
   //deleting film data from the server
   $.ajax({
