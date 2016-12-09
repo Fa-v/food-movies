@@ -2,10 +2,10 @@ $(document).ready(initializeEvents);
 
 function initializeEvents() {
   //cahcing buttons id and inicialize events
-  var saveButton = $('#save'),
-    deleteButton = $('#delete'),
-    modifyButton = $('#modify'),
-    tableElement = $('#movie-table');
+  var saveButton = $('#save');
+  var deleteButton = $('#delete');
+  var modifyButton = $('#modify');
+  var tableElement = $('#movie-table');
 
   saveButton.click(saveMovieData);
   modifyButton.click(modifyMovie);
@@ -25,19 +25,19 @@ function clearInputs() {
 
 function saveMovieData(event) {
   //caching dom elements
-  var $movieTitle = $('#title'),
-      $movieDirector = $('#director'),
-      $movieDate = $('#date'),
-      $movieSynopsis = $('#synopsis'),
-      $saveSucessMessage = $('#save-success-message');
+  var $movieTitle = $('#title');
+  var $movieDirector = $('#director');
+  var $movieDate = $('#date');
+  var $movieSynopsis = $('#synopsis');
+  var $saveSucessMessage = $('#save-success-message');
        
   //setting a movie object 
-    movieObject = {
-      title: $movieTitle.val(),
-      director: $movieDirector.val(),
-      date: $movieDate.val(),
-      synopsis: $movieSynopsis.val()
-    };
+  movieObject = {
+    title: $movieTitle.val(),
+    director: $movieDirector.val(),
+    date: $movieDate.val(),
+    synopsis: $movieSynopsis.val()
+  };
   //creating a json object from a js object and posting data to the json server
   postMovieData(JSON.stringify(movieObject));
   
@@ -51,16 +51,15 @@ function showMessage($target) {
 }
 
 function appendRowData(movie) {
-  var $tableBody = $('#movie-table tbody'),
-    $rowData;
+  var $tableBody = $('#movie-table tbody');
+  var $rowData;
 
-  $rowData = $('<tr><td>' +
-    '<input class="checkbox" type="checkbox">' + '</td><td id="row-id">' +
-    movie.id + '</td><td id="row-title">' +
+  $rowData = $('<tr data-movie-id="' + movie._id + '"><td>' +
+    '<input class="checkbox" type="checkbox">' + '</td><td id="row-title">' +
     movie.title + '</td><td id="row-director">' +
     movie.director + '</td><td id="row-date">' +
     movie.date + '</td><td id="row-synopsis">' +
-    movie.synopsis + '</td><td>' +
+    movie.synopsis + '</td>' +
     '</tr>');
 
   $tableBody.append($rowData);
@@ -73,7 +72,7 @@ function updateMovieList(newMovie) {
 
 function createMovieList(movieObjectArray) {
   //initialize the table with data from the server (database)
-  movieObjectArray.films.forEach(function(movie) {
+  movieObjectArray.forEach(function(movie) {
     appendRowData(movie);
   });
 }
@@ -81,17 +80,17 @@ function createMovieList(movieObjectArray) {
 function fillForm(event) {
 // Cached row element values
   if(this.checked) {
-      var $checkedBoxes = $("input:checked").closest('tr'),
-      $rowId = $checkedBoxes[0].childNodes[1].textContent,
-      $rowTitle = $checkedBoxes[0].childNodes[2].textContent,
-      $rowDirector = $checkedBoxes[0].childNodes[3].textContent,
-      $rowDate = $checkedBoxes[0].childNodes[4].textContent,
-      $rowSynopsis = $checkedBoxes[0].childNodes[5].textContent;
+    var $checkedBoxes = $("input:checked").closest('tr');
+    var $rowId = $checkedBoxes.attr('data-movie-id');
+    var $rowTitle = $checkedBoxes[0].childNodes[1].textContent;
+    var $rowDirector = $checkedBoxes[0].childNodes[2].textContent;
+    var $rowDate = $checkedBoxes[0].childNodes[3].textContent;
+    var $rowSynopsis = $checkedBoxes[0].childNodes[4].textContent;
     // Cached form inputs
-    var $movieTitle = $('#title'),
-        $movieDirector = $('#director'),
-        $movieDate = $('#date'),
-        $movieSynopsis = $('#synopsis');
+    var $movieTitle = $('#title');
+    var $movieDirector = $('#director');
+    var $movieDate = $('#date');
+    var $movieSynopsis = $('#synopsis');
     
     $movieTitle.val($rowTitle);
     $movieDirector.val($rowDirector);
@@ -103,9 +102,9 @@ function fillForm(event) {
 }
 
 function modifyRowContent(putData) {
-    //finding the checked row td values and overwriting with the new values
-  var $checkedBoxes = $("input:checked").closest('tr'),
-    $modifyMessage = $('#modify-success-message');
+  //finding the checked row td values and overwriting with the new values
+  var $checkedBoxes = $("input:checked").closest('tr');
+  var $modifyMessage = $('#modify-success-message');
     
   //update modified row movie data
   $checkedBoxes.find('#row-title').text(putData.title);
@@ -120,13 +119,13 @@ function modifyRowContent(putData) {
 
 function modifyMovie(event) {
   // Cached form inputs
-  var $movieTitle = $('#title'),
-      $movieDirector = $('#director'),
-      $movieDate = $('#date'),
-      $movieSynopsis = $('#synopsis'),
-      $checkedBoxes = $("input:checked").closest('tr'),
-      $modifyWarningMessage = $('#modify-warning-message'),
-      $rowId = $checkedBoxes[0].childNodes[1].textContent;
+  var $movieTitle = $('#title');
+  var $movieDirector = $('#director');
+  var $movieDate = $('#date');
+  var $movieSynopsis = $('#synopsis');
+  var $checkedBoxes = $("input:checked").closest('tr');
+  var $modifyWarningMessage = $('#modify-warning-message');
+  var $rowId = $checkedBoxes.attr('data-movie-id');
 
   if($checkedBoxes.length > 1) {
     showMessage($modifyWarningMessage);
@@ -145,7 +144,7 @@ function modifyMovie(event) {
 function deleteRow() {
   //delete checked rows from the dom
   var $checkedBoxes = $("input:checked").closest('tr');
-    $deleteMessage = $('#delete-success-message');
+  var $deleteMessage = $('#delete-success-message');
   
   $checkedBoxes.remove();
   clearInputs();
@@ -155,7 +154,7 @@ function deleteRow() {
 function deleteMovie(event) {
   //delete checked row data from the server
   var $checkedBoxes = $("input:checked").closest('tr');
-  var id = $checkedBoxes[0].childNodes[1].textContent;
+  var id = $checkedBoxes.attr('data-movie-id');
 
   deleteMovieData(id);
 }
